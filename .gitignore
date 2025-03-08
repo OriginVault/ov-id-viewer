@@ -122,3 +122,5 @@ dist
 lib/
 
 .git
+
+*storybook.log

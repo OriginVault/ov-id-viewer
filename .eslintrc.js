@@ -6,14 +6,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     project: ['./tsconfig.json'],
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:node/recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:node/recommended', 'plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended', 'plugin:@typescript-eslint/recommended-requiring-type-checking', 'plugin:prettier/recommended', 'plugin:storybook/recommended'],
   rules: {
     'prettier/prettier': 'warn',
     'node/no-missing-import': 'off',

@@ -1,0 +1,24 @@
+
+.viewer.light:hover {
+  background: linear-gradient(230deg,white, #c9b36d, #f5be6b, #ecadef, #add4ef,#5794b4, #5794b4, white);
+  background-size: 500% 500%;
+  animation: background-gradient 60s ease-in-out infinite;
+}
+
+.viewer.dark:hover {
+  background: linear-gradient(230deg, #1c2a35, black, #212831, #9c27b0, black);
+  background-size: 500% 500%;
+  animation: background-gradient 60s ease-in-out infinite;
+}
+
+.viewer.transparent {
+  background-color: transparent;
+}
+
+@keyframes background-gradient {
+    0%{background-position:0% 0%}
+    25%{background-position:25% 50%}
+    50%{background-position:100% 97%}
+    25%{background-position:50% 25%}
+    100%{background-position:0% 0%}
+}

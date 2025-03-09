@@ -1,8 +1,8 @@
 import React from 'react';
-import { Popper, Container, Box, Typography, createTheme, ThemeProvider, Collapse, IconButton, Link, AccordionDetails, Accordion, AccordionSummary, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
+import { Popper, Container, Box, Typography, createTheme, ThemeProvider, Collapse, IconButton, Link, AccordionDetails, Accordion, AccordionSummary, Table, TableBody, TableCell, TableContainer, TableRow, AccordionActions, Button } from '@mui/material';
 import Form from '@rjsf/mui';
 import validator from '@rjsf/validator-ajv8';
-import { VerifiedUserOutlined } from '@mui/icons-material';
+import { ExpandCircleDownRounded, VerifiedUserOutlined } from '@mui/icons-material';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { format, toZonedTime } from 'date-fns-tz';
 
@@ -144,12 +144,19 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                                 <Typography variant="body2">Created: {formatDate(resource?.created)}</Typography>
                               </Box>
                           </AccordionSummary>
+                          <AccordionActions>
+                            <IconButton>
+                              <ExpandCircleDownRounded />
+                            </IconButton>
+                          </AccordionActions>
                           <AccordionDetails>
-                            <Typography variant="body2">
-                              <Link href={`https://resolver.cheqd.net/1.0/identifiers/${resource?.resourceURI}`} target="_blank" style={{ textDecoration: 'none', color: 'inherit', marginBottom: '10px', cursor: 'pointer' }}>
-                                Resource Details
-                              </Link>
-                            </Typography>
+                            <Button variant="contained" color="primary">
+                              <Typography variant="body2">
+                                <Link href={`https://resolver.cheqd.net/1.0/identifiers/${resource?.resourceURI}`} target="_blank" style={{ textDecoration: 'none', color: 'inherit', marginBottom: '10px', cursor: 'pointer' }}>
+                                  Resource Details
+                                </Link>
+                              </Typography>
+                            </Button>
                             <TableContainer>
                               <Table style={{ width: '100%' }}>
                                 <TableBody>

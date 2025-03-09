@@ -1,6 +1,7 @@
 import React from 'react';
 import { Popper, Container, Box, Typography, createTheme, ThemeProvider, Collapse, IconButton, Link, AccordionDetails, Accordion, AccordionSummary, Table, TableBody, TableCell, TableContainer, TableRow, AccordionActions, Button } from '@mui/material';
 import Form from '@rjsf/mui';
+import { ErrorBoundary } from "react-error-boundary";
 import validator from '@rjsf/validator-ajv8';
 import { ExpandCircleDownRounded, VerifiedUserOutlined } from '@mui/icons-material';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -227,97 +228,111 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
     }
   };
 
+  function fallbackRender({ error, resetErrorBoundary }) {
+
+    return (
+      <div role="alert">
+        <p>Something went wrong:</p>
+        <pre style={{ color: "red" }}>{error.message}</pre>
+      </div>
+    );
+  }
+
   return (
-    <ThemeProvider theme={theme}>
-      <Container maxWidth="sm" sx={{ mt: 4 }}>
-          <Box onMouseLeave={handleHidePopper}>
-            <Popper style={{ 
-              zIndex: 1300, 
-              backgroundColor: '#1c2a35', 
-              padding: '10px',
-              borderRadius: '10px',
-              color: '#add4ef',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column'
-            }} open={Boolean(anchorEl)} anchorEl={anchorEl} placement="bottom">
-              <div style={{
-                width: 0,
-                height: 0,
-                borderLeft: '10px solid transparent',
-                borderRight: '10px solid transparent',
-                borderBottom: '10px solid #1c2a35',
+    <ErrorBoundary
+      fallbackRender={fallbackRender}
+    >
+      <ThemeProvider theme={theme}>
+        <Container maxWidth="sm" sx={{ mt: 4 }}>
+            <Box onMouseLeave={handleHidePopper}>
+              <Popper style={{ 
+                zIndex: 1300, 
+                backgroundColor: '#1c2a35', 
+                padding: '10px',
                 borderRadius: '10px',
-                position: 'absolute',
-                top: '-4px',
-                transform: 'translateX(-50%)'
-              }}></div>
-              <Typography variant="subtitle2" sx={{
+                color: '#add4ef',
                 display: 'flex',
+                justifyContent: 'center',
                 alignItems: 'center',
-                "&:hover": {
-                  color: '#fe9334'
-                }
-              }}>
-                <VerifiedUserOutlined style={{ width: '16px', height: '16px', marginRight: '1px' }}/>
-                <Link style={{ color: 'inherit', textDecoration: 'none' }} href={`https://resolver.cheqd.net/1.0/identifiers/${formData.did}`} target="_blank">{formData.did}</Link>
-              </Typography>
-            </Popper>
-            <Box
-              style={{ 
+                flexDirection: 'column'
+              }} open={Boolean(anchorEl)} anchorEl={anchorEl} placement="bottom">
+                <div style={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: '10px solid transparent',
+                  borderRight: '10px solid transparent',
+                  borderBottom: '10px solid #1c2a35',
+                  borderRadius: '10px',
+                  position: 'absolute',
+                  top: '-4px',
+                  transform: 'translateX(-50%)'
+                }}></div>
+                <Typography variant="subtitle2" sx={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
-                  width: '100%'
-              }} 
-            >
-              <Typography 
-                variant="h5" 
-                align="center" 
-                gutterBottom 
-                sx={{ marginBottom: '10px' }}
-                onClick={onClick} 
-                onMouseEnter={handleShowPopper}
-              >
-                {title}
-              </Typography>
+                  alignItems: 'center',
+                  "&:hover": {
+                    color: '#fe9334'
+                  }
+                }}>
+                  <VerifiedUserOutlined style={{ width: '16px', height: '16px', marginRight: '1px' }}/>
+                  <Link style={{ color: 'inherit', textDecoration: 'none' }} href={`https://resolver.cheqd.net/1.0/identifiers/${formData.did}`} target="_blank">{formData.did}</Link>
+                </Typography>
+              </Popper>
               <Box
                 style={{ 
-                  display: 'flex',
-                  alignItems: 'center', 
-                  justifyContent: 'flex-start', 
-                  flexDirection: 'row',
-                  cursor: 'pointer',
-                  paddingBottom: '2px'
-                }}
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                    width: '100%'
+                }} 
               >
-                <img
-                  title="OriginVault"
-                  alt="OriginVaultLogo"
-                  src="https://gray-objective-tiglon-784.mypinata.cloud/ipfs/Qma7EjPPPfomzEKkYcJa2ctEFPUhHaMwiojTR1wTQPg2x8"
-                  style={{ width: "24px" }}
-                />
-                <Typography style={{ paddingLeft: '4px',  fontSize: '12px', cursor: 'pointer' }}>
-                  OV Verified DID Document
+                <Typography 
+                  variant="h5" 
+                  align="center" 
+                  gutterBottom 
+                  sx={{ marginBottom: '10px' }}
+                  onClick={onClick} 
+                  onMouseEnter={handleShowPopper}
+                >
+                  {title}
                 </Typography>
-                
+                <Box
+                  style={{ 
+                    display: 'flex',
+                    alignItems: 'center', 
+                    justifyContent: 'flex-start', 
+                    flexDirection: 'row',
+                    cursor: 'pointer',
+                    paddingBottom: '2px'
+                  }}
+                >
+                  <img
+                    title="OriginVault"
+                    alt="OriginVaultLogo"
+                    src="https://gray-objective-tiglon-784.mypinata.cloud/ipfs/Qma7EjPPPfomzEKkYcJa2ctEFPUhHaMwiojTR1wTQPg2x8"
+                    style={{ width: "24px" }}
+                  />
+                  <Typography style={{ paddingLeft: '4px',  fontSize: '12px', cursor: 'pointer' }}>
+                    OV Verified DID Document
+                  </Typography>
+                  
+                </Box>
               </Box>
+              <Typography style={{ paddingLeft: '4px',  fontSize: '10px', cursor: 'pointer', fontStyle: 'italic' }}>
+                Created At: {formatDate(formData?.created)}
+              </Typography>
+              <Typography style={{ paddingLeft: '4px',  fontSize: '10px', cursor: 'pointer', fontStyle: 'italic' }}>
+                Validated At: {validatedAt ? formatDate(validatedAt?.toISOString()) : ''}
+              </Typography>
             </Box>
-            <Typography style={{ paddingLeft: '4px',  fontSize: '10px', cursor: 'pointer', fontStyle: 'italic' }}>
-              Created At: {formatDate(formData?.created)}
-            </Typography>
-            <Typography style={{ paddingLeft: '4px',  fontSize: '10px', cursor: 'pointer', fontStyle: 'italic' }}>
-              Validated At: {validatedAt ? formatDate(validatedAt?.toISOString()) : ''}
-            </Typography>
-          </Box>
-          <IconButton onClick={() => onClose()}>
-            <Collapse />
-          </IconButton>
-          <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} disabled readonly />
-      </Container>
-    </ThemeProvider>
+            <IconButton onClick={() => onClose()}>
+              <Collapse />
+            </IconButton>
+            <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} disabled readonly />
+        </Container>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 

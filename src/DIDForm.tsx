@@ -138,25 +138,26 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                     </Box>
                     {sortedResources?.map((resource: any, index: number) => (
                       <Accordion key={resource?.resourceName}>
-                          <AccordionSummary style={{ backgroundColor: '#1c2a35', color: '#add4ef' }}>
+                          <AccordionSummary 
+                            style={{ width: '100%', backgroundColor: '#1c2a35', color: '#add4ef', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'stretch' }}
+                            expandIcon={<ExpandCircleDownRounded style={{ color: '#add4ef' }}/>}
+                          >
                               <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                                 <Typography variant="body2">{`${resource?.resourceName} #${index + 1} `}</Typography>
                                 <Typography variant="body2">Created: {formatDate(resource?.created)}</Typography>
                               </Box>
                           </AccordionSummary>
-                          <AccordionActions>
-                            <IconButton>
-                              <ExpandCircleDownRounded />
-                            </IconButton>
-                          </AccordionActions>
+                          
                           <AccordionDetails>
-                            <Button variant="contained" color="primary">
-                              <Typography variant="body2">
-                                <Link href={`https://resolver.cheqd.net/1.0/identifiers/${resource?.resourceURI}`} target="_blank" style={{ textDecoration: 'none', color: 'inherit', marginBottom: '10px', cursor: 'pointer' }}>
-                                  Resource Details
-                                </Link>
-                              </Typography>
-                            </Button>
+                            <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                              <Button variant="contained" style={{ backgroundColor: "#f2d087", color: "#1c2a35", marginBottom: '10px' }}>
+                                <Typography variant="body2">
+                                  <Link href={`https://resolver.cheqd.net/1.0/identifiers/${resource?.resourceURI}`} target="_blank" style={{ textDecoration: 'none', color: 'inherit', marginBottom: '10px', cursor: 'pointer' }}>
+                                    View Resource
+                                  </Link>
+                                </Typography>
+                              </Button>
+                            </Box>
                             <TableContainer>
                               <Table style={{ width: '100%' }}>
                                 <TableBody>
@@ -250,7 +251,7 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                 borderRadius: '10px',
                 position: 'absolute',
                 top: '-4px',
-                left: '50%',
+                transform: 'translateX(-50%)'
               }}></div>
               <Typography variant="subtitle2" sx={{
                 display: 'flex',

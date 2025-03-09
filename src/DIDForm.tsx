@@ -116,7 +116,7 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
       },
       "ui:widget": (props) => {
         const groupedResources: Record<string, DIDFetchResponse['didDocumentMetadata']['linkedResourceMetadata']> = props.value.reduce((acc: any, resource: any) => {
-          const type = resource.resourceType || 'Unknown'; // Group by resource type
+          const type = resource?.resourceType || 'Unknown'; // Group by resource type
           if (!acc[type]) {
             acc[type] = [];
           }
@@ -128,25 +128,25 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
           <div>
             {sortedTypes?.map((type: string) => {
               const resources = groupedResources[type];
-              const sortedResources = resources.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
+              const sortedResources = resources?.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
               return (
                 resourceRenderer ? resourceRenderer(resources) : 
                   <div key={type} style={{ marginBottom: '14px' }}>
                     <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', padding: '10px' }}>
                       <Typography variant="h6">{type} ({resources.length})</Typography>
-                      <Typography variant="body2">Latest Version: {sortedResources[0].resourceVersion}</Typography>
+                      <Typography variant="body2">Latest Version: {sortedResources?.[0]?.resourceVersion}</Typography>
                     </Box>
-                    {sortedResources.map((resource: any, index: number) => (
-                      <Accordion key={resource.resourceName}>
+                    {sortedResources?.map((resource: any, index: number) => (
+                      <Accordion key={resource?.resourceName}>
                           <AccordionSummary style={{ backgroundColor: '#1c2a35', color: '#add4ef' }}>
                               <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-                                <Typography variant="body2">{`${resource.resourceName} #${index + 1} `}</Typography>
-                                <Typography variant="body2">Created: {formatDate(resource.created)}</Typography>
+                                <Typography variant="body2">{`${resource?.resourceName} #${index + 1} `}</Typography>
+                                <Typography variant="body2">Created: {formatDate(resource?.created)}</Typography>
                               </Box>
                           </AccordionSummary>
                           <AccordionDetails>
                             <Typography variant="body2">
-                              <Link href={`https://resolver.cheqd.net/1.0/identifiers/${resource.resourceURI}`} target="_blank" style={{ textDecoration: 'none', color: 'inherit', marginBottom: '10px', cursor: 'pointer' }}>
+                              <Link href={`https://resolver.cheqd.net/1.0/identifiers/${resource?.resourceURI}`} target="_blank" style={{ textDecoration: 'none', color: 'inherit', marginBottom: '10px', cursor: 'pointer' }}>
                                 Resource Details
                               </Link>
                             </Typography>
@@ -190,14 +190,14 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
 
   // Transform the raw data into the shape required by our form schema
   const formData = {
-    did: data.didDocument.id,
-    created: formatDate(data.didDocumentMetadata.created),
-    version: data.didDocumentMetadata.versionId,
-    verificationMethods: data.didDocument.verificationMethod.map(method => ({
-      id: method.id,
-      type: method.type
+    did: data?.didDocument?.id,
+    created: formatDate(data?.didDocumentMetadata?.created),
+    version: data?.didDocumentMetadata?.versionId,
+    verificationMethods: data?.didDocument?.verificationMethod?.map(method => ({
+      id: method?.id,
+      type: method?.type
     })),
-    linkedResources: data.didDocumentMetadata.linkedResourceMetadata.filter(resource => resourceTypes?.includes(resource.resourceType))
+    linkedResources: data?.didDocumentMetadata?.linkedResourceMetadata?.filter(resource => resourceTypes?.includes(resource?.resourceType))
   };
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -243,7 +243,7 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                 borderRadius: '10px',
                 position: 'absolute',
                 top: '-4px',
-                left: '20%',
+                left: '50%',
               }}></div>
               <Typography variant="subtitle2" sx={{
                 display: 'flex',
@@ -298,10 +298,10 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
               </Box>
             </Box>
             <Typography style={{ paddingLeft: '4px',  fontSize: '10px', cursor: 'pointer', fontStyle: 'italic' }}>
-              Created At: {formatDate(formData.created)}
+              Created At: {formatDate(formData?.created)}
             </Typography>
             <Typography style={{ paddingLeft: '4px',  fontSize: '10px', cursor: 'pointer', fontStyle: 'italic' }}>
-              Validated At: {validatedAt ? formatDate(validatedAt.toISOString()) : ''}
+              Validated At: {validatedAt ? formatDate(validatedAt?.toISOString()) : ''}
             </Typography>
           </Box>
           <IconButton onClick={() => onClose()}>

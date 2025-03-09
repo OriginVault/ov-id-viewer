@@ -1,21 +1,31 @@
 import React, { useState } from "react";
-import { Card, CardContent, Container, IconButton, Paper, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material"
-import "./viewer.css";
+import { CircularProgress, IconButton, Popover } from "@mui/material"
+import DIDForm from "./DIDForm";
 
 interface OVIdViewerProps {
   did: string;
-  variant?: "dark" | "light" | "transparent";
   size?: "sm" | "md" | "lg";
+  title?: string;
+  render?: (data: any) => React.ReactNode;
+  renderProps?: {
+    title?: string;
+    onClose: () => void;
+    validatedAt: Date | null;
+  };
+  resourceTypes?: string[];
+  resourceRenderer?: (resource: any) => React.ReactNode;
 }
 
-const OVIdViewer = ({ did, variant = "dark", size = "md" }: OVIdViewerProps) => {
+const OVIdViewer = ({ did, size = "md", title, render, renderProps, resourceTypes, resourceRenderer }: OVIdViewerProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [data, setData] = useState<any>(null);
+  const [validatedAt, setValidatedAt] = useState<Date | null>(null);
 
   const handleClick = async (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     const url = `https://resolver.cheqd.net/1.0/identifiers/${did}`;
     const response = await fetch(url);
+    setValidatedAt(new Date());
     const data = await response.json();
     setData(data);
   };
@@ -26,33 +36,28 @@ const OVIdViewer = ({ did, variant = "dark", size = "md" }: OVIdViewerProps) => 
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleString('en-US', { timeZone });
-  };
 
   return (
     <div>
       <IconButton
         aria-describedby={id}
         onClick={handleClick}
-        className={`viewer ${variant}`}
-        sx={{ 
-          cursor: "pointer",
-          transition: "all 0.3s ease",
-         }}
       >
-        <img
-          title="OriginVault"
-          alt="OriginVaultLogo"
-          src="https://gray-objective-tiglon-784.mypinata.cloud/ipfs/Qma7EjPPPfomzEKkYcJa2ctEFPUhHaMwiojTR1wTQPg2x8"
-          style={{ width: size === "sm" ? "24px" : size === "md" ? "36px" : "48px", cursor: "pointer" }}
-        />
+        {open && data === null ? 
+          <CircularProgress size={size === "sm" ? 24 : size === "md" ? 36 : 48} style={{ color: '#f2d087' }}/>
+         : (
+          <img
+            title="Origin Information"
+            alt="Origin Information"
+            src="https://gray-objective-tiglon-784.mypinata.cloud/ipfs/Qma7EjPPPfomzEKkYcJa2ctEFPUhHaMwiojTR1wTQPg2x8"
+            style={{ width: size === "sm" ? "24px" : size === "md" ? "36px" : "48px", cursor: "pointer" }}
+          />
+        )}
       </IconButton>
       <Popover
         id={id}
-        open={open}
+        open={open && data !== null}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
@@ -63,83 +68,24 @@ const OVIdViewer = ({ did, variant = "dark", size = "md" }: OVIdViewerProps) => 
           vertical: "top",
           horizontal: "center",
         }}
+        slotProps={{
+          paper: {
+            style: {
+              backgroundColor: '#f2d087',
+            },
+          },
+        }}
       >
-        <Typography sx={{ p: 2 }}>
-          {data ? (
-            <Container maxWidth="md" sx={{ mt: 4 }}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  Decentralized Identifier (DID) Document
-                </Typography>
-                
-                <Typography variant="subtitle1" gutterBottom>
-                  <strong>DID:</strong> {data.didDocument.id}
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom>
-                  <strong>Created:</strong> {formatDate(data.didDocumentMetadata.created)}
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom>
-                  <strong>Version ID:</strong> {data.didDocumentMetadata.versionId}
-                </Typography>
-                
-                <TableContainer component={Paper} sx={{ mt: 2 }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell><strong>Verification Method</strong></TableCell>
-                        <TableCell><strong>Type</strong></TableCell>
-                        <TableCell><strong>Public Key</strong></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {data.didDocument.verificationMethod.map((method, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{method.id}</TableCell>
-                          <TableCell>{method.type}</TableCell>
-                          <TableCell>{method.publicKeyMultibase}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-
-                <Typography variant="h6" sx={{ mt: 4 }}>
-                  Linked Resources
-                </Typography>
-                <TableContainer component={Paper} sx={{ mt: 2 }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell><strong>Resource Name</strong></TableCell>
-                        <TableCell><strong>Type</strong></TableCell>
-                        <TableCell><strong>Media Type</strong></TableCell>
-                        <TableCell><strong>Created</strong></TableCell>
-                        <TableCell><strong>Resource URI</strong></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {data.didDocumentMetadata.linkedResourceMetadata
-                        .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime())
-                        .map((resource, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{resource.resourceName}</TableCell>
-                          <TableCell>{resource.resourceType}</TableCell>
-                          <TableCell>{resource.mediaType}</TableCell>
-                          <TableCell>{formatDate(resource.created)}</TableCell>
-                          <TableCell><a href={resource.resourceURI} target="_blank" rel="noopener noreferrer">View</a></TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardContent>
-            </Card>
-          </Container>
-          ) : (
-            "Loading..."
-          )}
-        </Typography>
+        {render ? render({ data, renderProps }) : 
+          <DIDForm 
+            data={data} 
+            title={title} 
+            onClose={handleClose} 
+            validatedAt={validatedAt} 
+            resourceTypes={resourceTypes}
+            resourceRenderer={resourceRenderer}
+          />
+        }
       </Popover>
     </div>
   );

@@ -17,20 +17,30 @@ async function getCommits() {
 }
 
 async function signRelease() {
-    const spinner = ora('Signing release metadata...').start();
+    const spinner = ora()
+    const startTime = Date.now();
+
+    const timer = setInterval(() => {
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        spinner.text = `Signing release metadata... (${elapsedSeconds}s elapsed)`;
+    }, 1000);
+
+    spinner.start();
+
     try {
         const { parentAgent, currentDIDKey, publishWorkingKey, publishRelease } = await parentStore.initialize();
-        console.log('currentDIDKey', currentDIDKey);
+
         const commits = await getCommits();
         if (commits.length === 0) {
             console.log("⚠️ No new commits to sign.");
+            clearInterval(timer);
             process.exit(0);
         }
 
         const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
         
         const releaseId = uuidv5(`${packageJson.name}-${packageJson.version}-${new Date().toISOString()}`, uuidv5.URL);
-        const bundleHash = await parentAgent.getBundleHash();
+        const bundleHash = await parentStore.getBundleHash();
 
         const releaseMetadata = {
             id: releaseId,
@@ -63,12 +73,14 @@ async function signRelease() {
             throw error;
         }
 
-        const publishedRelease = await publishRelease(signedReleaseMetadata, packageJson.name);
+        const publishedRelease = await publishRelease(signedReleaseMetadata, packageJson.name, packageJson.version);
+        clearInterval(timer);
         spinner.succeed(`✅ Release metadata signatures for ${packageJson.name}@${packageJson.version} published successfully`, {
             publishedRelease,
             publishedWorkingKey
         });
     } catch (error) {
+        clearInterval(timer);
         console.error("❌ Error signing release metadata:", error);
         process.exit(1);
     }

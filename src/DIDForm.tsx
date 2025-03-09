@@ -144,7 +144,7 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                             expandIcon={<ExpandCircleDownRounded style={{ color: '#add4ef' }}/>}
                           >
                               <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-                                <Typography variant="body2">{`${resource?.resourceName} #${index + 1} `}</Typography>
+                                <Typography variant="body2">{`${resource?.resourceName} #${resources.length - index} `}</Typography>
                                 <Typography variant="body2">Created: {formatDate(resource?.created)}</Typography>
                               </Box>
                           </AccordionSummary>

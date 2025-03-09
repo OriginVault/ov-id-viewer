@@ -24,10 +24,15 @@ const OVIdViewer = ({ did, size = "md", title, render, renderProps, resourceType
   const handleClick = async (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     const url = `https://resolver.cheqd.net/1.0/identifiers/${did}`;
-    const response = await fetch(url);
-    setValidatedAt(new Date());
-    const data = await response.json();
-    setData(data);
+    try {
+      const response = await fetch(url);
+      setValidatedAt(new Date());
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.error(error);
+      setData(null);
+    }
   };
 
   const handleClose = () => {

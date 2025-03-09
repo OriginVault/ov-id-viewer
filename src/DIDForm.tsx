@@ -11,8 +11,30 @@ const theme = createTheme();
 
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+const normalizeDate = (date: string): string => {
+  // Example: Convert "MM/DD/YYYY" or "DD/MM/YYYY" to "YYYY-MM-DD"
+  const parts = date.split(/[-/]/); // Split by '-' or '/'
+  
+  if (parts.length === 3) {
+    const year = parts[2];
+    const month = parts[1].padStart(2, '0'); // Ensure two digits
+    const day = parts[0].padStart(2, '0'); // Ensure two digits
+    return `${year}-${month}-${day}T00:00:00Z`; // Add time and timezone
+  }
+  
+  return date; // Return original if not in expected format
+};
+
 const formatDate = (date: string) => {
-  const zonedDate = toZonedTime(new Date(date), timeZone);
+  const normalizedDate = normalizeDate(date);
+  const parsedDate = new Date(normalizedDate);
+  
+  if (!isFinite(parsedDate.getTime())) {
+    console.error("Invalid date:", date);
+    return ""; // Handle invalid date
+  }
+  
+  const zonedDate = toZonedTime(parsedDate, timeZone);
   return format(zonedDate, 'yyyy-MM-dd HH:mm:ss zzz', { timeZone });
 };
 

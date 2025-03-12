@@ -3,39 +3,30 @@ import { Popper, Container, Box, Typography, createTheme, ThemeProvider, Collaps
 import Form from '@rjsf/mui';
 import { ErrorBoundary } from "react-error-boundary";
 import validator from '@rjsf/validator-ajv8';
-import { ExpandCircleDownRounded, VerifiedUserOutlined } from '@mui/icons-material';
+import { ExpandCircleDownRounded, VerifiedUserOutlined, Close } from '@mui/icons-material';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { format, toZonedTime } from 'date-fns-tz';
+import { formatInTimeZone } from 'date-fns-tz';
 
 const theme = createTheme();
 
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-const normalizeDate = (date: string): string => {
-  // Example: Convert "MM/DD/YYYY" or "DD/MM/YYYY" to "YYYY-MM-DD"
-  const parts = date.split(/[-/]/); // Split by '-' or '/'
-  
-  if (parts.length === 3) {
-    const year = parts[2];
-    const month = parts[1].padStart(2, '0'); // Ensure two digits
-    const day = parts[0].padStart(2, '0'); // Ensure two digits
-    return `${year}-${month}-${day}T00:00:00Z`; // Add time and timezone
-  }
-  
-  return date; // Return original if not in expected format
-};
-
 const formatDate = (date: string) => {
-  const normalizedDate = normalizeDate(date);
-  const parsedDate = new Date(normalizedDate);
-  
-  if (!isFinite(parsedDate.getTime())) {
-    console.error("Invalid date:", date);
-    return ""; // Handle invalid date
+  if (!date) return '';
+  // Format the date in the desired format using date-fns-tz
+  try {
+    return formatInTimeZone(new Date(date), timeZone, 'yyyy-MM-dd HH:mm:ss zzz');
+  } catch (error) {
+    console.error(error);
+    var temp = (date).replace('-','/');
+    var standardDate = new Date(temp);
+    try {
+      return formatInTimeZone(new Date(standardDate), timeZone, 'yyyy-MM-dd HH:mm:ss zzz');
+    } catch (error) {
+      console.error(error);
+      return date;
+    }
   }
-  
-  const zonedDate = toZonedTime(parsedDate, timeZone);
-  return format(zonedDate, 'yyyy-MM-dd HH:mm:ss zzz', { timeZone });
 };
 
 interface DIDFetchResponse {
@@ -309,16 +300,22 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                     width: '100%'
                 }} 
               >
-                <Typography 
-                  variant="h5" 
-                  align="center" 
-                  gutterBottom 
-                  sx={{ marginBottom: '10px' }}
-                  onClick={onClick} 
-                  onMouseEnter={handleShowPopper}
+                <Box
+                  sx={{ marginBottom: '10px', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
                 >
-                  {title}
-                </Typography>
+                  <Typography 
+                    variant="h5" 
+                    align="center" 
+                    gutterBottom 
+                    onClick={onClick} 
+                    onMouseEnter={handleShowPopper} 
+                  >
+                    {title}
+                  </Typography>
+                  <IconButton onClick={() => onClose()}>
+                    <Close />
+                  </IconButton>
+                </Box>
                 <Box
                   style={{ 
                     display: 'flex',
@@ -348,9 +345,7 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                 Validated At: {validatedAt ? formatDate(validatedAt?.toISOString()) : ''}
               </Typography>
             </Box>
-            <IconButton onClick={() => onClose()}>
-              <Collapse />
-            </IconButton>
+         
             <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} disabled readonly />
         </Container>
       </ThemeProvider>

@@ -1,5 +1,8 @@
 ## Change Log
 
+## v0.0.5
+- [feat]: Adds props for visibility to render props
+
 ## v0.0.4
 - [feat]: Adds isHoverable, isMobile, isHovering, and showByDefault props
 - [chore]: Updates ov-id-sdk dependency to 0.0.17

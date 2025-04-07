@@ -121,7 +121,7 @@ const formatResource = (resource: any) => {
 }
 
 const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRenderer }: { data: DIDFetchResponse, title?: string, onClose: () => void, validatedAt: Date | null, resourceTypes?: string[] | undefined, resourceRenderer?: (resource: any) => React.ReactNode }) => {
-  const sortedTypes = resourceTypes?.length ? resourceTypes?.sort((a: string, b: string) => a.localeCompare(b)) : data?.didDocumentMetadata?.linkedResourceMetadata.map((resource: any) => resource?.resourceType).sort((a: string, b: string) => a.localeCompare(b)).filter((type: string, index: number, self: string[]) => self.indexOf(type) === index);
+  const sortedTypes = resourceTypes?.length ? resourceTypes?.sort((a: string, b: string) => a.localeCompare(b)) : data?.didDocumentMetadata?.linkedResourceMetadata?.map((resource: any) => resource?.resourceType).sort((a: string, b: string) => a.localeCompare(b)).filter((type: string, index: number, self: string[]) => self.indexOf(type) === index);
   const uiSchema: UiSchema = {
     "ui:submitButtonOptions": { norender: true },
     linkedResources: {

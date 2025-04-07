@@ -46,6 +46,15 @@ const OVIdViewer = ({ did, size = "md", title, render, renderProps, resourceType
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
+  const childProps = {
+    data,
+    renderProps,
+    resourceTypes,
+    resourceRenderer,
+    open,
+    handleClose,
+  }
+
   return (
     <div>
       <IconButton
@@ -97,7 +106,7 @@ const OVIdViewer = ({ did, size = "md", title, render, renderProps, resourceType
           },
         }}
       >
-        {render ? render({ data, renderProps }) : 
+        {render ? render(childProps) : 
           <DIDForm 
             data={data} 
             title={title} 

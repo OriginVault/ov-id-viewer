@@ -1,7 +1,7 @@
 {
   "name": "@originvault/ov-id-viewer",
   "did": "did:cheqd:mainnet:38b0251d-34bc-566f-9d2c-15f65b4c55e0",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "organization": "originvault",
   "description": "A Typescript, React-based UI library for fetching and viewing cheqd DIDs",
   "main": "./dist/src/index.js",
@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.5",
-    "@originvault/ov-id-sdk": "^0.0.12",
+    "@originvault/ov-id-sdk": "^0.0.17",
     "@storybook/addon-essentials": "^8.6.4",
     "@storybook/addon-onboarding": "^8.6.4",
     "@storybook/blocks": "^8.6.4",

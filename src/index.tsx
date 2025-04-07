@@ -11,16 +11,20 @@ interface OVIdViewerProps {
     title?: string;
     onClose: () => void;
     validatedAt: Date | null;
+    [key: string]: any;
   };
   resourceTypes?: string[];
   resourceRenderer?: (resource: any) => React.ReactNode;
+  isHoverable?: boolean;
+  isMobile?: boolean;
+  isHovering?: boolean;
+  showByDefault?: boolean;
 }
 
-const OVIdViewer = ({ did, size = "md", title, render, renderProps, resourceTypes, resourceRenderer }: OVIdViewerProps) => {
+const OVIdViewer = ({ did, size = "md", title, render, renderProps, resourceTypes, resourceRenderer, isHoverable = false, isMobile = false, isHovering = false, showByDefault = true }: OVIdViewerProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [data, setData] = useState<any>(null);
   const [validatedAt, setValidatedAt] = useState<Date | null>(null);
-
   const handleClick = async (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     const url = `https://resolver.cheqd.net/1.0/identifiers/${did}`;
@@ -42,12 +46,24 @@ const OVIdViewer = ({ did, size = "md", title, render, renderProps, resourceType
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
-
   return (
     <div>
       <IconButton
         aria-describedby={id}
         onClick={handleClick}
+        sx={showByDefault ?
+          {
+            opacity: 1,
+          } 
+          :
+          {
+            opacity: isHoverable && (isHovering || isMobile) ? 0.3 : 0,
+            transition: "opacity 0.3s ease",
+            '&:hover': {
+              opacity: isHoverable ? 1 : 0,
+            },
+          }
+        }
       >
         {open && data === null ? 
           <CircularProgress size={size === "sm" ? 24 : size === "md" ? 36 : 48} style={{ color: '#f2d087' }}/>

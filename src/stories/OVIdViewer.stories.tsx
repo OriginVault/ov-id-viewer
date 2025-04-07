@@ -17,4 +17,26 @@ Default.args = {
     "NPM-Package-Publish-Event", 
     "Working-Directory-Derived-Key"
   ],
+  showByDefault: true,
+}; 
+
+
+export const NoResourceTypes = Template.bind({});
+NoResourceTypes.args = {
+  did: "did:cheqd:mainnet:280dd37c-aa96-5e71-8548-5125505a968e",
+  title: "@originvault/ov-id-sdk",
+  resourceTypes: [],
+  showByDefault: true,
+}; 
+
+export const Hoverable = Template.bind({});
+Hoverable.args = {
+  did: "did:cheqd:mainnet:280dd37c-aa96-5e71-8548-5125505a968e",
+  title: "@originvault/ov-id-sdk",
+  resourceTypes: [
+    "NPM-Package-Publish-Event", 
+    "Working-Directory-Derived-Key"
+  ],
+  isHoverable: true,
+  showByDefault: false,
 }; 

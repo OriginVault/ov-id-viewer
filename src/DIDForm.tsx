@@ -121,7 +121,7 @@ const formatResource = (resource: any) => {
 }
 
 const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRenderer }: { data: DIDFetchResponse, title?: string, onClose: () => void, validatedAt: Date | null, resourceTypes?: string[] | undefined, resourceRenderer?: (resource: any) => React.ReactNode }) => {
-  const sortedTypes = resourceTypes?.sort((a: string, b: string) => a.localeCompare(b));
+  const sortedTypes = resourceTypes?.length ? resourceTypes?.sort((a: string, b: string) => a.localeCompare(b)) : data?.didDocumentMetadata?.linkedResourceMetadata.map((resource: any) => resource?.resourceType).sort((a: string, b: string) => a.localeCompare(b)).filter((type: string, index: number, self: string[]) => self.indexOf(type) === index);
   const uiSchema: UiSchema = {
     "ui:submitButtonOptions": { norender: true },
     linkedResources: {
@@ -147,17 +147,17 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                 resourceRenderer ? resourceRenderer(resources) : 
                   <div key={type} style={{ marginBottom: '14px' }}>
                     <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', padding: '10px' }}>
-                      <Typography variant="h6">{type} ({resources.length})</Typography>
+                      <Typography variant="h6">{type} ({resources?.length})</Typography>
                       <Typography variant="body2">Latest Version: {sortedResources?.[0]?.resourceVersion}</Typography>
                     </Box>
                     {sortedResources?.map((resource: any, index: number) => (
-                      <Accordion key={resource?.resourceName}>
+                      <Accordion key={resource?.resourceId}>
                           <AccordionSummary 
                             style={{ width: '100%', backgroundColor: '#1c2a35', color: '#add4ef', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'stretch' }}
                             expandIcon={<ExpandCircleDownRounded style={{ color: '#add4ef' }}/>}
                           >
                               <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-                                <Typography variant="body2">{`${resource?.resourceName} #${resources.length - index} `}</Typography>
+                                <Typography variant="body2">{`${resource?.resourceName} #${resources?.length - index} `}</Typography>
                                 <Typography variant="body2">Created: {formatDate(resource?.created)}</Typography>
                               </Box>
                           </AccordionSummary>
@@ -219,7 +219,7 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
       id: method?.id,
       type: method?.type
     })),
-    linkedResources: data?.didDocumentMetadata?.linkedResourceMetadata?.filter(resource => resourceTypes?.includes(resource?.resourceType))
+    linkedResources: resourceTypes?.length ? data?.didDocumentMetadata?.linkedResourceMetadata?.filter(resource => resourceTypes?.includes(resource?.resourceType)) : data?.didDocumentMetadata?.linkedResourceMetadata
   };
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

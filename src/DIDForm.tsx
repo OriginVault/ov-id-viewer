@@ -166,7 +166,7 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                             <Box style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
                               <Button variant="contained" style={{ backgroundColor: "#f2d087", color: "#1c2a35", marginBottom: '10px' }}>
                                 <Typography variant="body2">
-                                  <Link href={`https://resolver.cheqd.net/1.0/identifiers/${resource?.resourceURI}`} target="_blank" style={{ textDecoration: 'none', color: 'inherit', marginBottom: '10px', cursor: 'pointer' }}>
+                                  <Link href={`https://resolver.originvault.box/1.0/identifiers/${resource?.resourceURI}`} target="_blank" style={{ textDecoration: 'none', color: 'inherit', marginBottom: '10px', cursor: 'pointer' }}>
                                     View Resource
                                   </Link>
                                 </Typography>
@@ -288,7 +288,7 @@ const DIDForm = ({ data, title, onClose, validatedAt, resourceTypes, resourceRen
                   }
                 }}>
                   <VerifiedUserOutlined style={{ width: '16px', height: '16px', marginRight: '1px' }}/>
-                  <Link style={{ color: 'inherit', textDecoration: 'none' }} href={`https://resolver.cheqd.net/1.0/identifiers/${formData.did}`} target="_blank">{formData.did}</Link>
+                  <Link style={{ color: 'inherit', textDecoration: 'none' }} href={`https://resolver.originvault.box/1.0/identifiers/${formData.did}`} target="_blank">{formData.did}</Link>
                 </Typography>
               </Popper>
               <Box

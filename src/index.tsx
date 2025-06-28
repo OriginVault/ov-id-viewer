@@ -27,7 +27,7 @@ const OVIdViewer = ({ did, size = "md", title, render, renderProps, resourceType
   const [validatedAt, setValidatedAt] = useState<Date | null>(null);
   const handleClick = async (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-    const url = `https://resolver.cheqd.net/1.0/identifiers/${did}`;
+    const url = `https://resolver.originvault.box/1.0/identifiers/${did}`;
     try {
       const response = await fetch(url);
       setValidatedAt(new Date());
